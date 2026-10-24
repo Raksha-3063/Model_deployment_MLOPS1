@@ -1,127 +1,277 @@
-# Flask Multiplication Table App 🐍🐳
+# Docker Commands — MLOps Learning Journey 🐳
 
-A simple Flask web application that accepts a number from the user and generates its multiplication table from 1 to 10. This project is part of my hands-on **MLOps learning journey**, focusing on Docker containerization and Docker Hub.
+This README documents the essential Docker commands I learned while containerizing a Flask multiplication-table application and publishing its image to Docker Hub.
 
-## 🚀 Project Overview
+## 📌 Project Details
 
-The application allows users to enter a number through a web interface and displays its multiplication table. It is built using Python and Flask and packaged into a Docker image for portability and deployment.
+- **Application:** Flask Multiplication Table App
+- **Containerization:** Docker
+- **Image Registry:** Docker Hub
+- **Docker Hub Repository:** [`rakshacc/multiplication-table-app`](https://hub.docker.com/r/rakshacc/multiplication-table-app)
+- **Image Tag:** `v1`
 
-## 🛠️ Tech Stack
+---
 
-- **Python** — Application logic
-- **Flask** — Web framework
-- **HTML** — User interface
-- **Docker** — Application containerization
-- **Docker Hub** — Docker image storage and distribution
+## 1. Verify Docker Installation
 
-## 📂 Project Structure
-
-```text
-Flask.APP/
-├── app.py
-├── requirements.txt
-├── Dockerfile
-└── README.md
-```
-
-## ⚙️ Run Locally
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/Raksha-3063/Model_deployment_MLOPS.git
-cd Model_deployment_MLOPS
-```
-
-Navigate to the Flask project directory if it is inside a subfolder.
-
-### 2. Create a virtual environment
-
-```bash
-python -m venv .venv
-```
-
-Activate it on Windows:
+Check the installed Docker version:
 
 ```powershell
-.\.venv\Scripts\Activate.ps1
+docker --version
 ```
 
-### 3. Install dependencies
+Check whether the Docker engine is running:
 
-```bash
-pip install -r requirements.txt
+```powershell
+docker info
 ```
 
-### 4. Start the application
+---
 
-```bash
-python app.py
-```
+## 2. Build a Docker Image
 
-Open http://127.0.0.1:5000 in your browser.
+Navigate to the directory containing the `Dockerfile` in VS Code.
 
-## 🐳 Run with Docker
-
-### 1. Build the Docker image
-
-```bash
+```powershell
 docker build -t multiplication-table-app .
 ```
 
-### 2. Run the container
+**What it does:**
+- Reads the instructions in the Dockerfile.
+- Installs the required dependencies.
+- Packages the application into a Docker image.
 
-```bash
-docker run -d --name multiplication-table -p 5000:5000 multiplication-table-app
+List available local images:
+
+```powershell
+docker images
 ```
 
-Open http://localhost:5000 to use the application.
+---
 
-### 3. View the running container
+## 3. Log In to Docker Hub
 
-```bash
-docker ps
+```powershell
+docker login
 ```
 
-### 4. Stop the container
+Authenticates Docker with Docker Hub so that images can be uploaded to your account.
 
-```bash
-docker stop multiplication-table
+---
+
+## 4. Tag the Docker Image
+
+```powershell
+docker tag multiplication-table-app:latest rakshacc/multiplication-table-app:v1
 ```
 
-## 📦 Docker Hub
+**What it does:**
 
-The Docker image is published on Docker Hub.
+Assigns a Docker Hub repository name and version tag to the local image.
 
-**Image:** `rakshacc/multiplication-table-app:v1`
+**Image naming format:**
 
-Pull the image:
+```text
+username/repository-name:tag
+```
 
-```bash
+Example:
+
+```text
+rakshacc/multiplication-table-app:v1
+```
+
+---
+
+## 5. Push the Image to Docker Hub
+
+```powershell
+docker push rakshacc/multiplication-table-app:v1
+```
+
+**What it does:**
+
+Uploads the image layers to Docker Hub, allowing the image to be retrieved from other machines.
+
+View the repository:
+
+[Docker Hub — multiplication-table-app](https://hub.docker.com/r/rakshacc/multiplication-table-app)
+
+---
+
+## 6. Pull an Image from Docker Hub
+
+```powershell
 docker pull rakshacc/multiplication-table-app:v1
 ```
 
-Run the pulled image:
+**What it does:**
 
-```bash
+Downloads the specified image from Docker Hub into the local Docker image store.
+
+Verify the downloaded image:
+
+```powershell
+docker images
+```
+
+If the image is already present and up to date, Docker may not need to download it again.
+
+---
+
+## 7. Run a Docker Container
+
+```powershell
 docker run -d --name multiplication-table -p 5000:5000 rakshacc/multiplication-table-app:v1
 ```
 
-## 🎯 Learning Outcomes
+**Command breakdown:**
 
-- Built a web application using Flask.
-- Created a Dockerfile to package the application.
-- Built and tagged a Docker image.
-- Ran the application inside a Docker container.
-- Pushed and pulled Docker images using Docker Hub.
-- Practiced the fundamentals of containerization as part of an MLOps workflow.
+| Option | Purpose |
+|---|---|
+| `docker run` | Creates and starts a container |
+| `-d` | Runs the container in the background |
+| `--name` | Assigns a container name |
+| `-p 5000:5000` | Maps host port 5000 to container port 5000 |
 
-## 🔮 Future Improvements
+Open the application in your browser:
 
-- Deploy the container to AWS EC2 or Google Cloud.
-- Set up CI/CD for automated builds and deployments.
-- Add automated testing.
-- Explore Kubernetes for container orchestration.
+http://localhost:5000
+
+---
+
+## 8. Container Management Commands
+
+### List running containers
+
+```powershell
+docker ps
+```
+
+### List all containers
+
+```powershell
+docker ps -a
+```
+
+### View container logs
+
+```powershell
+docker logs multiplication-table
+```
+
+### Stop a running container
+
+```powershell
+docker stop multiplication-table
+```
+
+### Start a stopped container
+
+```powershell
+docker start multiplication-table
+```
+
+### Remove a stopped container
+
+```powershell
+docker rm multiplication-table
+```
+
+### Remove a local image
+
+```powershell
+docker rmi multiplication-table-app:latest
+```
+
+Only remove an image when it is no longer needed and no remaining container depends on it.
+
+---
+
+## 9. Update and Publish a New Image Version
+
+When the application code changes, build and publish a new version.
+
+### Build the updated image
+
+```powershell
+docker build -t multiplication-table-app .
+```
+
+### Tag it as version 2
+
+```powershell
+docker tag multiplication-table-app:latest rakshacc/multiplication-table-app:v2
+```
+
+### Push version 2
+
+```powershell
+docker push rakshacc/multiplication-table-app:v2
+```
+
+### Pull version 2 on another machine
+
+```powershell
+docker pull rakshacc/multiplication-table-app:v2
+```
+
+Using version tags makes it easier to identify and deploy specific application versions.
+
+---
+
+## 10. Complete Docker Workflow
+
+```text
+Flask Application
+       |
+       v
+Create Dockerfile
+       |
+       v
+docker build
+       |
+       v
+Local Docker Image
+       |
+       v
+docker tag
+       |
+       v
+docker push
+       |
+       v
+Docker Hub
+       |
+       v
+docker pull
+       |
+       v
+docker run
+       |
+       v
+Running Application
+```
+
+---
+
+## 🎯 Key Concepts Learned
+
+- Docker images and containers
+- Dockerfiles and image building
+- Image tagging and versioning
+- Docker Hub authentication
+- Pushing and pulling images
+- Port mapping
+- Container logs and lifecycle management
+
+## 🚀 Next Steps in MLOps
+
+- Deploy the Docker image to AWS EC2.
+- Explore Amazon ECR for container image storage.
+- Learn Kubernetes for container orchestration.
+- Implement CI/CD pipelines for automated builds and deployments.
+- Deploy machine learning models using containers.
 
 ---
 
